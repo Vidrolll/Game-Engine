@@ -1,0 +1,153 @@
+//Rainbow gradient
+int red = 255;
+		int green = 0;
+		int blue = 0;
+		boolean gradienting = true;
+		int posX = 0;
+		int changeR=0;
+		int changeG=0;
+		int changeB=0;
+		while(gradienting) {
+			red+=changeR;
+			green+=changeG;
+			blue+=changeB;
+			int greaterNum = (int)MathUtils.greatest(red,green,blue);
+			double redRatio = (double)red/greaterNum;
+			double greenRatio = (double)green/greaterNum;
+			double blueRatio = (double)blue/greaterNum;
+			for(int i = 0; i < greaterNum; i++) {
+				int newRed = (int)(redRatio*i);
+				int newGreen = (int)(greenRatio*i);
+				int newBlue = (int)(blueRatio*i);
+				if(newRed>255)newRed=255;
+				if(newGreen>255)newGreen=255;
+				if(newBlue>255)newBlue=255;
+				Color gridColor = new Color(newRed,newGreen,newBlue);
+				g.setColor(gridColor);
+				g.fillRect(posX,50+i, 1, 1);
+			}
+			posX+=1;
+			if(red==255&&green==0&&blue==0) {changeR=0;changeG=1;changeB=0;}
+			if(red==255&&green==255&&blue==0) {changeR=-1;changeG=0;changeB=0;}
+			if(red==0&&green==255&&blue==0) {changeR=0;changeG=0;changeB=1;}
+			if(red==0&&green==255&&blue==255) {changeR=0;changeG=-1;changeB=0;}
+			if(red==0&&green==0&&blue==255) {changeR=1;changeG=0;changeB=0;}
+			if(red==255&&green==0&&blue==255) {changeR=0;changeG=0;changeB=-1;}
+			if(red==255&&blue==1) gradienting = false;
+		}
+		
+//Full color gradient
+Color startingColor = new Color(255,0,0);
+		g.setColor(startingColor);
+		int red = startingColor.getRed();
+		int green = startingColor.getGreen();
+		int blue = startingColor.getBlue();
+		int greaterNum = (int)MathUtils.greatest(red,green,blue);
+		double redRatio = (double)(255-red)/greaterNum;
+		double greenRatio = (double)(255-green)/greaterNum;
+		double blueRatio = (double)(255-blue)/greaterNum;
+		for(int i = 0; i < greaterNum; i++) {
+			int newRed = (int)(255-(redRatio*i));
+			int newGreen = (int)(255-(greenRatio*i));
+			int newBlue = (int)(255-(blueRatio*i));
+			if(newRed>255)newRed=255;
+			if(newRed<0)newRed=0;
+			if(newGreen>255)newGreen=255;
+			if(newGreen<0)newGreen=0;
+			if(newBlue>255)newBlue=255;
+			if(newBlue<0)newBlue=0;
+			Color rangeColor = new Color(newRed,newGreen,newBlue);
+			g.setColor(rangeColor);
+			g.fillRect(50+i, 50, 1, 1);
+
+			int red1 = rangeColor.getRed();
+			int green1 = rangeColor.getGreen();
+			int blue1 = rangeColor.getBlue();
+			int greaterNum1 = (int)MathUtils.greatest(red1,green1,blue1);
+			double redRatio1 = (double)red1/greaterNum1;
+			double greenRatio1 = (double)green1/greaterNum1;
+			double blueRatio1 = (double)blue1/greaterNum1;
+			for(int i1 = 0; i1 < greaterNum1; i1++) {
+				int newRed1 = (int)(red1-(redRatio1*i1));
+				int newGreen1 = (int)(green1-(greenRatio1*i1));
+				int newBlue1 = (int)(blue1-(blueRatio1*i1));
+				if(newRed1>255)newRed1=255;
+				if(newRed1<0)newRed1=0;
+				if(newGreen1>255)newGreen1=255;
+				if(newGreen1<0)newGreen1=0;
+				if(newBlue1>255)newBlue1=255;
+				if(newBlue1<0)newBlue1=0;
+				Color rangeColor1 = new Color(newRed1,newGreen1,newBlue1);
+				g.setColor(rangeColor1);
+				g.fillRect(50+i, 50+i1, 1, 1);
+			}
+		}
+		
+//Display all colors gradient
+int size = 30;
+		int dist = 30;
+		int xPos = 200;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.GREY, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.RED, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.ORANGE, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.YELLOW, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.LIME_GREEN, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.GREEN, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.LIGHT_GREEN, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.CYAN, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.LIGHT_BLUE, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.BLUE, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.PURPLE, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.PINK, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
+		xPos+=30;
+		for(int dif = 0; dif < 17; dif++) {
+			g.setColor(Colors.getColor(Colors.HOT_PINK, dif-8));
+			g.fillRect(xPos, 50 + (dif * dist), size, size);
+		}
