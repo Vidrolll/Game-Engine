@@ -19,10 +19,6 @@ public class Colors {
 	public static final Color PURPLE = new Color(128,0,255);
 	public static final Color PINK = new Color(255,0,255);
 	
-	{
-		Console.log("Test");
-	}
-	
 	public static final Color HOT_PINK = new Color(255,0,128);
 	
 	public static Color getColor(Color baseColor, int brightness) {
