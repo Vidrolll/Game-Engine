@@ -12,19 +12,20 @@ import com.tb2dge.main.util.enums.MouseType;
 
 public class Dropbox extends GUIElement implements Inputable {
 	LinkedList<String> options = new LinkedList<String>();
+	LinkedList<Button> buttons = new LinkedList<Button>();
 	
-	public Dropbox(int x, int y, int width, int height, GUIHandler gHandler, String... objects) {
+	public Dropbox(int x, int y, int width, int height, GUIHandler gHandler, String...options) {
 		super(x, y, width, height, gHandler);
-		for(String option : objects) options.add(option);
+		for(String option : options) this.options.add(option);
 	}
 	
 	@Override
 	public void input(KeyEvent e, KeyType kt) {
-		
+		for(Button button : buttons) button.input(e,kt);
 	}
 	@Override
 	public void input(MouseEvent e, MouseType mt, int mouseX, int mouseY) {
-		
+		for(Button button : buttons) button.input(e,mt,mouseX,mouseY);
 	}
 	@Override
 	public boolean isSelected() {
@@ -32,10 +33,10 @@ public class Dropbox extends GUIElement implements Inputable {
 	}
 	@Override
 	public void update() {
-		
+		for(Button button : buttons) button.update();
 	}
 	@Override
 	public void render(Graphics2D g) {
-		
+		for(Button button : buttons) button.render(g);
 	}
 }

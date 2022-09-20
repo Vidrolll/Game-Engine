@@ -2,11 +2,15 @@ package com.tb2dge.main;
 
 import java.awt.Canvas;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.VolatileImage;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
+import javax.swing.JPanel;
 
 import com.tb2dge.main.camera.Camera;
 import com.tb2dge.main.commands.Commands;
@@ -28,6 +32,28 @@ import com.tb2dge.main.util.enums.MouseType;
 import com.tb2dge.main.util.handlers.EntityHandler;
 import com.tb2dge.main.util.handlers.ObjectHandler;
 
+/**
+ * 
+ * @author Vidroll
+ *
+ * The first class to use in the game engine. To create a runnable game,
+ * make a main class that extends this class.
+ * 
+ * To add a window to your game make one using gui.windows.MainWindow.java
+ * upon creation of a window it will automatically connect it to your game.
+ * 
+ * to set a resolution use the method setResScale(int,int,int,int,double);
+ * the parameters would first be your resolution in the x direction (1920 being the usual standard)
+ * and the resolution in the y axis (1080 being the usual standard)
+ * next you would input the window size X and the window size Y.
+ * the double being the computer screens scale. the MainWindow class has a function
+ * to return this value using MainWindow.getWindowScale();
+ * 
+ * Override the setup() method for any game setup required
+ * 
+ * Other engine features to include start at line 211
+ */
+
 public class Game extends Canvas implements Runnable {
 	protected HashMap<String,Menu> menus = new HashMap<String,Menu>();
 	private static final long serialVersionUID = 1L;
@@ -37,12 +63,17 @@ public class Game extends Canvas implements Runnable {
 	public boolean showGUI = true; 
 	protected Thread thread;
 	protected boolean printFPS = true;
+	protected boolean printUpdates = false;
 	public double resX = 1;
 	public double resY = 1;
 	public double windowX = 1;
 	public double windowY = 1;
 	boolean garbageCollection = false;
 	public double windowScale = 1;
+	
+	public boolean antialiasing = false;
+	public Object RENDERING = RenderingHints.VALUE_RENDER_DEFAULT;
+	public Object INTERPOLATION = RenderingHints.VALUE_INTERPOLATION_BILINEAR;
 	
 	public Game(String gameName) {
 		Game.gameName = gameName;
@@ -82,6 +113,7 @@ public class Game extends Canvas implements Runnable {
 		double delta = 0;
 		long timer = System.currentTimeMillis();
 		int frames = 0;
+		int updates = 0;
 		while (running) {
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
@@ -98,6 +130,7 @@ public class Game extends Canvas implements Runnable {
 						if(menu.getValue().isShowing()) menu.getValue().update();
 					update();
 					delta--;
+					updates++;
 				}
 				draw();
 				frames++;
@@ -109,9 +142,11 @@ public class Game extends Canvas implements Runnable {
 			}
 			if (System.currentTimeMillis() - timer > 1000) {
 				if(printFPS)Console.log(frames);
+				if(printUpdates)Console.log(updates);
 				if(garbageCollection)System.gc();
 				timer += 1000;
 				frames = 0;
+				updates = 0;
 			}
 		}
 		stop();
@@ -155,44 +190,72 @@ public class Game extends Canvas implements Runnable {
 	public void printFPS(boolean value) {
 		printFPS = value;
 	}
+	public void printUpdates(boolean value) {
+		printUpdates = value;
+	}
 	public static String getGameName() {
 		return gameName;
 	}
+	public void setAntialiasing(boolean antialiasing) {
+		this.antialiasing = antialiasing;
+	}
+	public void setRendering(Object rendering) {
+		this.RENDERING = rendering;
+	}
+	public void setInterpolation(Object interpolation) {
+		this.INTERPOLATION = interpolation;
+	}
+	
 	public void draw() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null) {
-			this.createBufferStrategy(2);
+			if(this.getFocusCycleRootAncestor() != null)
+				this.createBufferStrategy(2);
 			return;
 		}
-		try {
-			Graphics2D g = (Graphics2D)bs.getDrawGraphics();
-			g.scale(windowX / resX * 1.0, windowY / resY * 1.0);
-			drawBackground(g);
-			EngineClasses.camera.render(g);
-			drawForeground(g);
-			EngineClasses.obh.render(g);
-			EngineClasses.eh.render(g);
-			g.dispose();
-			g = (Graphics2D)bs.getDrawGraphics();
-			g.scale(windowX / resX * 1.0, windowY / resY * 1.0);
-			for(Entry<String,Menu> menu : menus.entrySet()) {
-				Menu tempMenu = menu.getValue();
-				if(tempMenu.isShowing()) tempMenu.engineRender(g);
+		do {
+			try {
+				Graphics2D g = (Graphics2D)bs.getDrawGraphics();
+				if(antialiasing)g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,INTERPOLATION);
+				g.setRenderingHint(RenderingHints.KEY_RENDERING,RENDERING);
+				g.scale(windowX / resX * 1.0, windowY / resY * 1.0);
+				drawBackground(g);
+				EngineClasses.camera.render(g);
+				drawForeground(g);
+				EngineClasses.obh.render(g);
+				EngineClasses.eh.render(g);
+				for(Entry<String,Menu> menu : menus.entrySet()) {
+					Menu tempMenu = menu.getValue();
+					if(tempMenu.isShowing()) tempMenu.engineRender(g);
+				}
+				g.dispose();
+				g = (Graphics2D)bs.getDrawGraphics();
+				//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+//				g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_SPEED);
+				g.scale(windowX / resX * 1.0, windowY / resY * 1.0);
+				if(showGUI)EngineClasses.gh.render(g);
+				drawGUIOverlay(g);
+				EngineClasses.logo.render(g);
+				g.dispose();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				bs.show();
 			}
-			if(showGUI)EngineClasses.gh.render(g);
-			drawGUIOverlay(g);
-			EngineClasses.logo.render(g);
-			g.dispose();
-			bs.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} while(bs.contentsLost());
 	}
+	//Override this method to add updates to your game
 	public void update() {}
+	//Override this method to draw the background (first layer drawn)
 	public void drawBackground(Graphics2D g) {}
+	//Override this method to draw the foreground (second layer drawn)
 	public void drawForeground(Graphics2D g) {}
+	//Override this method to draw the gui (last layer drawn, not effected by camera effects)
 	public void drawGUIOverlay(Graphics2D g) {}
+	//Override this method to add keyboard input. input sent to the machine automatically feeds into this method
 	public void input(KeyEvent e, KeyType kt) {}
+	//Override this method to add mouse input. input sent to the machine automatically feeds into this method
 	public void input(MouseEvent e, MouseType mt, int mouseX, int mouseY) {}
 	public void engineInput(KeyEvent e, KeyType kt) {
 		for(Entry<String,Menu> menu : menus.entrySet())if(menu.getValue().isShowing())
