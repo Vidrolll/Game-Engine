@@ -1,12 +1,12 @@
 package com.tb2dge.main.commands;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.tb2dge.main.EngineSettings;
 
 public class Commands implements Runnable {
-	LinkedList<Command> cmds = new LinkedList<Command>();
+	ArrayList<Command> cmds = new ArrayList<Command>();
 	boolean running = false;
 	Thread cmdThread;
 	

@@ -1,13 +1,13 @@
 package com.tb2dge.main.camera;
 
 import java.awt.Graphics2D;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tb2dge.main.EngineSettings;
 
 public class Camera {
-	List<Effect> cameraEffects = new LinkedList<Effect>();
+	List<Effect> cameraEffects = new ArrayList<Effect>();
 	double xOffset = 0, yOffset = 0, xScale = 1, yScale = 1;
 	double xZoom = 0, yZoom = 0, zoomAmount = 0, zoomSpeed = 0;
 	double zoomScale = 1;

@@ -14,6 +14,15 @@ import com.tb2dge.main.util.Settings;
 import com.tb2dge.main.util.handlers.EntityHandler;
 import com.tb2dge.main.util.handlers.ObjectHandler;
 
+/**
+ * EngineClasses contains all the major important classes to be able to access at anytime
+ * from any class within the game. This includes things like texures, sounds, and the main file
+ * of the game itself.
+ * 
+ * @author Vidroll
+ *
+ */
+
 public class EngineClasses {
 	public volatile static Sounds sounds;
 	public volatile static Textures textures;

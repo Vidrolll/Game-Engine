@@ -30,6 +30,11 @@ public class MainWindow {
 		this.height = height;
 		this.main = main;
 	}
+	public void setUndecorated(boolean undecorated) {
+		window.dispose();
+		window.setUndecorated(undecorated);
+		window.setVisible(true);
+	}
 	public void toggleFullscreen() {
 		fullscreen = !fullscreen;
 		window.dispose();

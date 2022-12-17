@@ -24,12 +24,12 @@ public class GameFile {
 	}
 	
 	public void setupFile() {
-		if(location == FileLocation.APPDATA)
-			file = new File(FileLocation.APPDATA + folder + "/" + fileName);
+		if(location != FileLocation.RESOURCE_FOLDER)
+			file = new File(location + folder + "/" + fileName);
 	}
 	public void createFile() {
-		if(location == FileLocation.APPDATA) {
-			File folder = new File(FileLocation.APPDATA + this.folder + "/");
+		if(location != FileLocation.RESOURCE_FOLDER) {
+			File folder = new File(location + this.folder + "/");
 			folder.mkdir();
 			try {
 				file.createNewFile();
@@ -44,9 +44,11 @@ public class GameFile {
 			if(location == FileLocation.APPDATA) {
 				File file = new File(FileLocation.APPDATA + folder + "/" + fileName);
 				return new Scanner(file);
-			}
-			if(location == FileLocation.RESOURCE_FOLDER) {
+			} else if(location == FileLocation.RESOURCE_FOLDER) {
 				InputStream file = this.getClass().getResourceAsStream(FileLocation.RESOURCE_FOLDER + folder + fileName);
+				return new Scanner(file);
+			} else {
+				File file = new File(location + folder + "/" + fileName);
 				return new Scanner(file);
 			}
 		} catch (FileNotFoundException e) {
@@ -65,7 +67,7 @@ public class GameFile {
 		return linesArray;
 	}
 	public void write(String line) {
-		if(location != FileLocation.APPDATA) return;
+		if(location == FileLocation.RESOURCE_FOLDER) return;
 		try {
 			FileWriter writer = new FileWriter(this.file);
 			writer.write(line);
@@ -75,7 +77,7 @@ public class GameFile {
 		}
 	}
 	public void write(int line, String lineString) {
-		if(location != FileLocation.APPDATA) return;
+		if(location == FileLocation.RESOURCE_FOLDER) return;
 		String[] lines = null;
 		if(line < read().length)
 			lines = read();
@@ -93,7 +95,7 @@ public class GameFile {
 		}
 	}
 	public void write(String... lines) {
-		if(location != FileLocation.APPDATA) return;
+		if(location == FileLocation.RESOURCE_FOLDER) return;
 		try {
 			FileWriter writer = new FileWriter(this.file);
 			for(String currentLine : lines) writer.write(currentLine + "\n");
@@ -101,5 +103,8 @@ public class GameFile {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public File getFile() {
+		return file;
 	}
 }

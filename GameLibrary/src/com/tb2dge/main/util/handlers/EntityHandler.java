@@ -1,12 +1,12 @@
 package com.tb2dge.main.util.handlers;
 
 import java.awt.Graphics2D;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.tb2dge.main.entities.Entity;
 
 public class EntityHandler {
-	LinkedList<Entity> entities = new LinkedList<Entity>();
+	ArrayList<Entity> entities = new ArrayList<Entity>();
 	
 	public void addEntity(Entity entity) {
 		entity.setEH(this);
@@ -24,5 +24,10 @@ public class EntityHandler {
 	}
 	public void render(Graphics2D g) {
 		for(Entity entity : entities) entity.render(g);
+	}
+	public void clear() {
+		for(int i = 0; i < entities.size(); i++) {
+			entities.remove(i);
+		}
 	}
 }

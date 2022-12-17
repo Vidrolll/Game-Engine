@@ -62,6 +62,12 @@ public class Settings {
 			System.err.println("Couldnt find setting " + key + "!");
 		return null;
 	}
+	public static int getInt(String key) {
+		return Integer.parseInt(getSetting(key));
+	}
+	public static boolean getBoolean(String key) {
+		return Boolean.parseBoolean(getSetting(key));
+	}
 	public static void createSetting(String key, String value) {
 		if(settings.get(key) != null) {
 			updateSetting(key,value);
@@ -73,7 +79,6 @@ public class Settings {
 			for(int i = 0; i < settingsText.size(); i++) {
 				String line = settingsText.get(i);
 				writer.write(line + "\n");
-				
 			}
 			writer.write(key + ":" + value);
 			writer.close();

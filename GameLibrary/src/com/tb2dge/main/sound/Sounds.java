@@ -21,7 +21,30 @@ public class Sounds {
 		setupSounds();
 	}
 
-	public void setupSounds() {
+	public static HashMap<String, InputStream> setupSounds(String soundFilePath) {
+		HashMap<String, InputStream> sounds = new HashMap<String, InputStream>();
+		InputStream soundFile = Sound.class.getResourceAsStream("/sounds/"+soundFilePath+".txt");
+		if (soundFile == null) {
+			createSoundFolder();
+			return null;
+		}
+		Scanner fileReader = new Scanner(soundFile);
+		while (fileReader.hasNext()) {
+			String line = fileReader.nextLine();
+			if (line.equals(""))
+				continue;
+			if (line.contains("//"))
+				continue;
+			String[] contents = line.split(":");
+			InputStream audioFile = Sound.class.getResourceAsStream("/sounds/" + contents[1] + ".wav");
+			InputStream audioSource = new BufferedInputStream(audioFile);
+			sounds.put(contents[0], audioSource);
+		}
+		fileReader.close();
+		return sounds;
+	}
+	
+	public static void setupSounds() {
 		InputStream soundFile = Sound.class.getResourceAsStream("/sounds/sounds.txt");
 		if (soundFile == null) {
 			createSoundFolder();
@@ -42,7 +65,7 @@ public class Sounds {
 		fileReader.close();
 	}
 
-	public void createSoundFolder() {
+	public static void createSoundFolder() {
 		File resourceFolder = new File("resource/sounds/");
 		resourceFolder.mkdirs();
 		File soundsDoc = new File("resource/sounds/sounds.txt");

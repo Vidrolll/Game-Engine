@@ -3,7 +3,7 @@ package com.tb2dge.main.gui.elements;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.tb2dge.main.gui.GUIHandler;
 import com.tb2dge.main.gui.interfaces.Inputable;
@@ -11,8 +11,8 @@ import com.tb2dge.main.util.enums.KeyType;
 import com.tb2dge.main.util.enums.MouseType;
 
 public class Dropbox extends GUIElement implements Inputable {
-	LinkedList<String> options = new LinkedList<String>();
-	LinkedList<Button> buttons = new LinkedList<Button>();
+	ArrayList<String> options = new ArrayList<String>();
+	ArrayList<Button> buttons = new ArrayList<Button>();
 	
 	public Dropbox(int x, int y, int width, int height, GUIHandler gHandler, String...options) {
 		super(x, y, width, height, gHandler);

@@ -7,7 +7,7 @@ import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.tb2dge.main.EngineSettings;
 import com.tb2dge.main.gui.GUIHandler;
@@ -17,8 +17,8 @@ import com.tb2dge.main.util.enums.KeyType;
 import com.tb2dge.main.util.enums.MouseType;
 
 public class GUIPanel {
-	public LinkedList<GUIElement> elements = new LinkedList<GUIElement>();
-	public LinkedList<GUIPanel> panels = new LinkedList<GUIPanel>();
+	public ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
+	public ArrayList<GUIPanel> panels = new ArrayList<GUIPanel>();
 	double x,y,width,height,velX,velY;
 	int borderThickness = 1;
 	

@@ -1,16 +1,14 @@
 package com.tb2dge.main;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferStrategy;
-import java.awt.image.VolatileImage;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import javax.swing.JPanel;
 
 import com.tb2dge.main.camera.Camera;
 import com.tb2dge.main.commands.Commands;
@@ -34,24 +32,22 @@ import com.tb2dge.main.util.handlers.ObjectHandler;
 
 /**
  * 
- * @author Vidroll
- *
  * The first class to use in the game engine. To create a runnable game,
  * make a main class that extends this class.
- * 
+ * <br><br>
  * To add a window to your game make one using gui.windows.MainWindow.java
  * upon creation of a window it will automatically connect it to your game.
- * 
+ * <br><br>
  * to set a resolution use the method setResScale(int,int,int,int,double);
  * the parameters would first be your resolution in the x direction (1920 being the usual standard)
  * and the resolution in the y axis (1080 being the usual standard)
  * next you would input the window size X and the window size Y.
  * the double being the computer screens scale. the MainWindow class has a function
  * to return this value using MainWindow.getWindowScale();
- * 
+ * <br><br>
  * Override the setup() method for any game setup required
  * 
- * Other engine features to include start at line 211
+ *  @author Vidroll
  */
 
 public class Game extends Canvas implements Runnable {
@@ -70,6 +66,7 @@ public class Game extends Canvas implements Runnable {
 	public double windowY = 1;
 	boolean garbageCollection = false;
 	public double windowScale = 1;
+	public int aspectX,aspectY;
 	
 	public boolean antialiasing = false;
 	public Object RENDERING = RenderingHints.VALUE_RENDER_DEFAULT;
@@ -78,6 +75,7 @@ public class Game extends Canvas implements Runnable {
 	public Game(String gameName) {
 		Game.gameName = gameName;
 		new EngineClasses();
+		aspectX = 16; aspectY = 9;
 		EngineClasses.main = this;
 		EngineClasses.timers = new Timers();
 		EngineClasses.camera = new Camera();
@@ -97,7 +95,7 @@ public class Game extends Canvas implements Runnable {
 	public void setupResources() {
 		EngineClasses.sounds = new Sounds();
 		EngineClasses.textures = new Textures();
-		EngineClasses.animations = new Animations(this);
+		EngineClasses.animations = new Animations();
 		EngineClasses.settings = new Settings();
 		EngineClasses.fileEncryptor = new FileEncryptor();
 		EngineClasses.lang = new Lang();
@@ -115,6 +113,7 @@ public class Game extends Canvas implements Runnable {
 		int frames = 0;
 		int updates = 0;
 		while (running) {
+			ns = 1000000000 / EngineSettings.UPDATE_RATE;
 			long now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
@@ -181,11 +180,16 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 	public void setResScale(double resX, double resY, double windowX, double windowY, double windowScale) {
+		setResScale(resX,resY,windowX,windowY,windowScale,16,9);
+	}
+	public void setResScale(double resX, double resY, double windowX, double windowY, double windowScale, int aspectX, int aspectY) {
 		this.resX = resX;
 		this.resY = resY;
 		this.windowX = windowX/windowScale;
 		this.windowY = windowY/windowScale;
 		this.windowScale = windowScale;
+		this.aspectX = aspectX;
+		this.aspectY = aspectY;
 	}
 	public void printFPS(boolean value) {
 		printFPS = value;
@@ -206,6 +210,22 @@ public class Game extends Canvas implements Runnable {
 		this.INTERPOLATION = interpolation;
 	}
 	
+	public double getYScale() {
+		return windowY / resY * 1.0;
+	}
+	
+	public int getWidth() {
+		return (int)((windowY / aspectY) * aspectX);
+	}
+	
+	public double getXScale() {
+		return getWidth() / resX * 1.0;
+	}
+	
+	public int getOffset() {
+		return (int)(windowX - getWidth()) / 2;
+	}
+	
 	public void draw() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null) {
@@ -216,10 +236,14 @@ public class Game extends Canvas implements Runnable {
 		do {
 			try {
 				Graphics2D g = (Graphics2D)bs.getDrawGraphics();
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, 99999, 99999);
+				g.translate(getOffset(),0);
+				g.clipRect(0,0,(int)(resX*getXScale()),(int)(resY*getYScale()));
 				if(antialiasing)g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,INTERPOLATION);
 				g.setRenderingHint(RenderingHints.KEY_RENDERING,RENDERING);
-				g.scale(windowX / resX * 1.0, windowY / resY * 1.0);
+				g.scale(getXScale(),getYScale());
 				drawBackground(g);
 				EngineClasses.camera.render(g);
 				drawForeground(g);
@@ -233,6 +257,8 @@ public class Game extends Canvas implements Runnable {
 				g = (Graphics2D)bs.getDrawGraphics();
 				//g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 //				g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_SPEED);
+				g.clipRect(0,0,(int)(resX*getXScale()),(int)(resY*getYScale()));
+				g.translate(getOffset(),0);
 				g.scale(windowX / resX * 1.0, windowY / resY * 1.0);
 				if(showGUI)EngineClasses.gh.render(g);
 				drawGUIOverlay(g);

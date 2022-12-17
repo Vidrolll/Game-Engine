@@ -1,12 +1,12 @@
 package com.tb2dge.main.util.handlers;
 
 import java.awt.Graphics2D;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.tb2dge.main.entities.Object;
 
 public class ObjectHandler {
-	LinkedList<Object> objects = new LinkedList<Object>();
+	ArrayList<Object> objects = new ArrayList<Object>();
 	
 	public void addObject(Object object) {
 		object.setOBH(this);

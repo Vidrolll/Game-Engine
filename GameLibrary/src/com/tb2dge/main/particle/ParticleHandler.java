@@ -1,14 +1,14 @@
 package com.tb2dge.main.particle;
 
 import java.awt.Graphics2D;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.tb2dge.main.particle.emitters.ParticleEmitter;
 import com.tb2dge.main.particle.particles.Particle;
 
 public class ParticleHandler {
-	public LinkedList<Particle> particles = new LinkedList<Particle>();
-	public LinkedList<ParticleEmitter> particleEmitters = new LinkedList<ParticleEmitter>();
+	public ArrayList<Particle> particles = new ArrayList<Particle>();
+	public ArrayList<ParticleEmitter> particleEmitters = new ArrayList<ParticleEmitter>();
 	
 	public void addParticle(Particle particle) {
 		particles.add(particle);

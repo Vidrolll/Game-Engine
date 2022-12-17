@@ -3,7 +3,7 @@ package com.tb2dge.main.gui;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.tb2dge.main.gui.elements.GUIElement;
 import com.tb2dge.main.gui.interfaces.Inputable;
@@ -12,8 +12,8 @@ import com.tb2dge.main.util.enums.KeyType;
 import com.tb2dge.main.util.enums.MouseType;
 
 public class GUIHandler {
-	public LinkedList<GUIElement> elements = new LinkedList<GUIElement>();
-	public LinkedList<GUIPanel> panels = new LinkedList<GUIPanel>();
+	public ArrayList<GUIElement> elements = new ArrayList<GUIElement>();
+	public ArrayList<GUIPanel> panels = new ArrayList<GUIPanel>();
 	
 	public void addElement(GUIElement element) {
 		elements.add(element);

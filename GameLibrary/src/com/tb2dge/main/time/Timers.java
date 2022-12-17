@@ -1,9 +1,9 @@
 package com.tb2dge.main.time;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Timers {
-	public static LinkedList<Timer> timers = new LinkedList<Timer>();
+	public static ArrayList<Timer> timers = new ArrayList<Timer>();
 	
 	public static void addTimer(Timer timer) {
 		timers.add(timer);

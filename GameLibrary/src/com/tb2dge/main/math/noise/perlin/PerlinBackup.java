@@ -1,10 +1,10 @@
-package com.tb2dge.main.math.noise;
+package com.tb2dge.main.math.noise.perlin;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class PerlinNoise {
+public class PerlinBackup {
 	// Constants for setting up the Perlin-1 noise functions
 	private static final int B = 0x1000;
 	private static final int BM = 0xff;
@@ -35,7 +35,7 @@ public class PerlinNoise {
 	/**
 	 * Create a new noise creator with the default seed value
 	 */
-	public PerlinNoise() {
+	public PerlinBackup() {
 		this(DEFAULT_SEED);
 	}
 
@@ -44,7 +44,7 @@ public class PerlinNoise {
 	 *
 	 * @param seed The seed value to use
 	 */
-	public PerlinNoise(long seed) {
+	public PerlinBackup(long seed) {
 		p_imp = new int[DEFAULT_SAMPLE_SIZE << 1];
 		r = new Random(seed);
 		this.seed = seed;

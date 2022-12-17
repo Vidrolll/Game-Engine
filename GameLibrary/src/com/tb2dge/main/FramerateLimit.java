@@ -1,5 +1,15 @@
 package com.tb2dge.main;
 
+/**
+ * 
+ * The FramerateLimit class handles all your framerate needs. it operates in the background
+ * making sure that the framerate never exceeds the amount you want. there are no functions here
+ * useful to the programmer as theyre all handled behind the scenes.
+ * 
+ * @author Vidroll
+ *
+ */
+
 public class FramerateLimit {
 	private static final long NANOS_IN_SECOND = 1000L * 1000L * 1000L;
 	private static long nextFrame = 0;
